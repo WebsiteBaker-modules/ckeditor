@@ -15,6 +15,9 @@
  *
  * Changelog
  * 
+ *  version 4.4.8 150706
+ *  ! update to CKE 4.4.8
+ *
  *  version 4.4.3 140727
  *  + function "show_wysiwyg_editor" accepts parameter "$toolbar" now to allow modules to use inidividual toolbars, thanks to dbs for suggesting
  *  ! using cke 4.4.3 full
@@ -58,7 +61,7 @@
  *  ! again fixed problem in wb droplets plugin
  *  ! fixed problem in wb link plugin
  *  + bakery items are selectable as wb link, thanks to jacoby22: http://www.websitebaker.org/forum/index.php/topic,25334.msg181817.html#msg181817
- *	! wb link plugin: items select is only shown when a news, topis or bakery page is selected
+ *    ! wb link plugin: items select is only shown when a news, topis or bakery page is selected
  *
  *  version 4.3.0 131120
  *  + using cke 4.3.0 full
@@ -118,16 +121,16 @@
 // Must include code to stop this file being accessed directly
 if(!defined('WB_PATH')) {
 
-	require_once(dirname(dirname(dirname(__FILE__))).'/framework/globalExceptionHandler.php');
-	throw new IllegalFileException();
+    require_once(dirname(dirname(dirname(__FILE__))).'/framework/globalExceptionHandler.php');
+    throw new IllegalFileException();
 }
 /* -------------------------------------------------------- */
 
-$module_directory	= 'ckeditor';
-$module_name			= 'CKEditor';
-$module_function	= 'WYSIWYG';
-$module_version		= '4.4.3';
-$module_platform	= '2.8.3';
-$module_author		= 'Michael Tenschert, Dietrich Roland Pehlke, erpe, Luisehahne.';
-$module_license		= '<a target="_blank" href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>';
-$module_description = 'includes CKEditor 4.4.3, CKE allows editing content and can be integrated in frontend and backend modules.';
+$module_directory   = 'ckeditor';
+$module_name        = 'CKEditor v4.5.3';
+$module_function    = 'WYSIWYG';
+$module_version     = '4.5.3';
+$module_platform    = '2.8.3';
+$module_author      = 'Michael Tenschert, Dietrich Roland Pehlke, erpe, Luisehahne, WebBird';
+$module_license     = '<a target="_blank" href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>';
+$module_description = 'includes CKEditor 4.5.3, CKE allows editing content and can be integrated in frontend and backend modules.';
