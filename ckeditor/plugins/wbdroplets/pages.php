@@ -19,8 +19,10 @@ header('Pragma: no-cache');
     to wbdroplets plugin.
 */
 
-// Include the config file
-require('../../../../../config.php');
+require ( dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/config.php');
+
+$wb284  = (file_exists(dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/setup.ini.php')) ? true : false;
+
 
 // Create new admin object
 if(!class_exists('admin', false)){ require(WB_PATH.'/framework/class.admin.php'); }
@@ -62,16 +64,10 @@ if(!function_exists('cleanup')) {
     }
 
 
-
-
-
-
-
-
-
 $DropletSelectBox = "var DropletSelectBox = new Array( new Array( '', '' )";
 $description = "var DropletInfoBox = new Array( new Array( '', '' )";
 $usage = "var DropletUsageBox = new Array( new Array( '', '' )";
+
 $array = array();
     $sql  = 'SELECT * FROM `'.TABLE_PREFIX.'mod_droplets` ';
     $sql .= 'WHERE `active`=1 ';
