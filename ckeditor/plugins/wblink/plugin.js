@@ -3,7 +3,7 @@
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-'use strict';
+// 'use strict';
 
 ( function() {
     CKEDITOR.plugins.add( 'wblink', {
