@@ -20,16 +20,16 @@ class CKEditor
     /**
      * The version of %CKEditor.
      */
-    const version = '4.5.5';
+    const version = '4.5.6';
     /**
      * A constant string unique for each release of %CKEditor.
      */
-    const timestamp = ' b34ea4d';
+    const timestamp = 'FB9E';
     /**
      * A string indicating the creation date of %CKEditor.
      * Do not change it unless you want to force browsers to not use previously cached version of %CKEditor.
      */
-    public $timestamp = "b34ea4d";
+    public $timestamp = "FB9E";
 
     /**
      * URL to the %CKEditor installation directory (absolute or relative to document root).
@@ -93,9 +93,10 @@ class CKEditor
      *
      *  @param $basePath (string) URL to the %CKEditor installation directory (optional).
      */
-    function __construct($basePath = null) {
+    public function __construct($basePath = null) {
         if (!empty($basePath)) {
             $this->basePath = $basePath;
+            
         }
     }
 
@@ -137,7 +138,7 @@ class CKEditor
         $out = "<textarea id=\"" . $name . "\" name=\"" . $name . "\"" . $attr . ">" . htmlspecialchars($value) . "</textarea>\n";
         if (!$this->initialized) {
             $out .= $this->init();
-        }                            
+        }
 
         $_config = $this->configSettings($config, $events);
         $js = $this->returnGlobalEvents();
@@ -348,8 +349,7 @@ class CKEditor
               . '    }';
         $out .= "\n//]]>";
         $out .= "</script>\n";
-
-        print $out;
+        return $out;
     }
 
     /**
@@ -359,8 +359,7 @@ class CKEditor
      */
     private function script($js)
     {
-        $this->loadBackendCss();
-        $out = "<script type=\"text/javascript\">";
+        $out  = "<script type=\"text/javascript\">";
         $out .= "//<![CDATA[\n";
         $out .= $js;
         $out .= "\n//]]>";
@@ -414,6 +413,10 @@ class CKEditor
         return $_config;
     }
 
+    public function setConfig ( $key, $value ) {
+        $this->config[$key] = $value;
+    }
+
     /**
      * Return global event handlers.
      */
@@ -460,6 +463,7 @@ class CKEditor
             $initComplete = true;
             return "";
         }
+        $out  = $this->loadBackendCss();
 
         $args = "";
         $ckeditorPath = $this->ckeditorPath();

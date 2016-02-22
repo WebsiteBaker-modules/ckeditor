@@ -64,9 +64,14 @@ class CKEditorPlus extends CKEditor
         )
     );
 
-    public function setTemplatePath ($templateFolder='') {
+//    public function __construct() { }
+
+    public function setTemplatePath ($templateFolder='') 
+    {
+//        static $initComplete;
         if($templateFolder=='') { return; }
         $this->templateFolder = $templateFolder;
+        $_config = $this->config;
         foreach($this->files as $key=>$val) {
             foreach($val as $temp_path) {
                 $base = "/templates/".$this->templateFolder.$temp_path;
@@ -76,6 +81,7 @@ class CKEditorPlus extends CKEditor
                 }
             }
         }
+        $this->config = array_merge($_config, $this->paths);;
     }
 
 /**
@@ -137,7 +143,9 @@ class CKEditorPlus extends CKEditor
  *    @param    string    Optional a path_addition, e.g. "wb:"
  *
  */
-    public function resolve_path($key= "", $aPath, $aPath_default, $path_addition="") {
+    public function resolve_path($key= "", $aPath, $aPath_default, $path_addition="") 
+    {
+        static $initComplete = array();
         $temp = WB_PATH.$aPath;
         if (true === file_exists($temp)) {
             $aPath = $path_addition.WB_URL.$aPath;
@@ -146,9 +154,15 @@ class CKEditorPlus extends CKEditor
         }
         if (array_key_exists($key, $this->paths)) {
             $this->config[$key] = (($this->paths[$key ] == "") ? $aPath : $this->paths[$key]) ;
+            $initComplete[$key] = $this->config[$key];
         } else {
             $this->config[$key] = $aPath;
         }
+/*
+print '<pre  class="mod-pre rounded">function <span>'.__FUNCTION__.'( '.''.' );</span>  filename: <span>'.basename(__FILE__).'</span>  line: '.__LINE__.' -> <br />'; 
+print_r( $this->config ); print '</pre>'; flush (); //  ob_flush();;sleep(10); die(); 
+*/
+
     }
 
 /**

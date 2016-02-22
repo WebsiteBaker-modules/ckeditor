@@ -14,18 +14,6 @@
  * @lastmodified   $Date: 2012-03-18 00:37:27 +0100 (So, 18. Mrz 2012) $
  *
  */
-
-/* -------------------------------------------------------- */
-// Must include code to stop this file being accessed directly
-if(defined('WB_PATH') == false) { die('Cannot access '.basename(__DIR__).'/'.basename(__FILE__).' directly'); }
-/* -------------------------------------------------------- */
-$debug = false;
-
-if (true === $debug) {
-    ini_set('display_errors', 1);
-    error_reporting(E_ALL|E_STRICT);
-}
-
 /**
  *    Function called by parent, default by the wysiwyg-module
  *
@@ -91,9 +79,12 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
     $ckeditor = new CKEditorPlus( $ckeRelPath );
 /******************************************************************************************/
 
+    $ckeditor->config['ModulVersion'] = isset($module_version) ? $module_version :  'none';
+    $ckeditor->config['WBrevision'] = defined('REVISION') ? REVISION :  '';
+    $ckeditor->config['WBversion'] = defined('VERSION') ? VERSION :  '';
+
 /******************************************************************************************/
 
-    $ckeditor->config['ModulVersion'] = isset($module_version) ? $module_version :  'none';
     $temp = '';
     if (isset($admin->page_id)) {
         $query = "SELECT `template` from `".TABLE_PREFIX."pages` where `page_id`='".$page_id."'";
@@ -143,18 +134,22 @@ $ckeditor->looking_for_wysiwyg_admin( $database );
 
 /**
  *    Define all extra CKEditor plugins in _yourwb_/modules/ckeditor067/ckeditor/plugins here
- *
+ * 
  */
 if( !$bWbConfigSetting ) { 
-    $ckeditor->config['extraPlugins'] = 'justify,find,flash,colorbutton,colordialog,dialogadvtab,'
+    $ckeditor->config['extraPlugins'] = 'justify,find,flash,colorbutton,colordialog,dialogadvtab,autogrow,'
                                       . 'div,font,forms,iframe,indentblock,language,bidi,liststyle,pagebreak,save,'
                                       . 'selectall,showblocks,smiley,templates,codemirror,syntaxhighlight,'
-                                      . 'wblink,wbdroplets,youtube,oembed,backup,wbsave';
+                                      . 'wblink,wbdroplets,youtube,oembed,backup,wbsave,wbabout,wbrelation'
+                                      .'';
 
-    $ckeditor->config['removePlugins'] = 'wsc,link,save,newpage,print,shybutton,preview';
+    $ckeditor->config['removePlugins'] = 'link,wsc,save,newpage,print,shybutton,preview,'
+                                        .'sourcearea,sourcedialog,imageresponsive,image2';
  }
 
-if ($toolbar) $ckeditor->config['toolbar'] = $toolbar;
+if( !$bWbConfigSetting ) { $ckeditor->config['uiColor'] = '#BFD7EB'; }
+
+if ( $toolbar && !$bWbConfigSetting ) $ckeditor->config['toolbar'] = $toolbar;
 
 /**
  *  Whether to show the browser native context menu when the Ctrl
@@ -183,7 +178,9 @@ if( !$bWbConfigSetting ) {
  }
 /**
  *    The filebrowser are called in the include, because later on we can make switches, use WB_URL and so on
+$ckeditor->config['filebrowserBrowseUrl'] = $ckeditor->basePath.'filemanager/browser/elfinder/elfinder.html';
  */
+
 $connectorPath = $ckeditor->basePath.'filemanager/connectors/php/connector.php';
 $ckeditor->config['filebrowserBrowseUrl'] = $ckeditor->basePath.'filemanager/browser/default/browser.html?Connector='.$connectorPath;
 $ckeditor->config['filebrowserImageBrowseUrl'] = $ckeditor->basePath.'filemanager/browser/default/browser.html?Type=Image&Connector='.$connectorPath;
@@ -272,15 +269,23 @@ if (isset($database) && $ckeditor->wysiwyg_admin_exists ) {
     if ( $data ) {
         foreach ($data as $key => $value) {
             $ckeditor->config[$key] = $value; 
-            $ckeditor->config['toolbar'] = $ckeditor->config['menu'];
+//            $ckeditor->config['toolbar'] = $ckeditor->config['menu'];
         }
     }
 }
 
-if ( (!$ckeditor->wysiwyg_admin_exists) || ($ckeditor->force) )    {
-    $ckeditor->config['height'] = $height;
-    $ckeditor->config['width']  = $width;
-}
+
+if( !$bWbConfigSetting ) { 
+    if ( (!$ckeditor->wysiwyg_admin_exists) || ($ckeditor->force) ) {
+        $ckeditor->config['height'] = $height;
+        $ckeditor->config['width']  = $width;
+    }
+
+    $ckeditor->config['autoGrow_minHeight'] = 150;
+    $ckeditor->config['autoGrow_maxHeight'] = $height;
+    $ckeditor->config['autoGrow_bottomSpace'] = 50;
+    $ckeditor->config['autoGrow_onStartup'] = true;
+ }
 
 $ckeditor->reverse_htmlentities($content);
 

@@ -19,7 +19,7 @@
 // Must include code to stop this file being accessed directly
 if(!defined('WB_PATH')) {
 
-	require_once(dirname(dirname(dirname(__FILE__))).'/framework/globalExceptionHandler.php');
-	throw new IllegalFileException();
+    require_once(dirname(dirname(dirname(__FILE__))).'/framework/globalExceptionHandler.php');
+    throw new IllegalFileException();
 }
 /* -------------------------------------------------------- */

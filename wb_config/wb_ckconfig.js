@@ -1,8 +1,8 @@
 /**
  *  @module         ckeditor
  *  @version        see info.php of this module
- *  @authors        Michael Tenschert, Dietrich Roland Pehlke, Dietmar Wöllbrink, Marmot
- *  @copyright      Michael Tenschert, Dietrich Roland Pehlke
+ *  @authors        Michael Tenschert, Dietrich Roland Pehlke, Dietmar Wöllbrink, Marmot, Luisehahne
+ *  @copyright      Frederico Knabben
  *  @license        GNU General Public License
  *  @license terms  see info.php of this module
  *  @platform       see info.php of this module
@@ -96,7 +96,7 @@ CKEDITOR.editorConfig = function( config )
 
   // The standard color of CKEditor. Can be changed in any hexadecimal color you like. Use the     
   // UIColor Plugin in your CKEditor to pick the right color.
-    config.uiColor = '#BDD5EA';
+    config.uiColor = '#BFD7EB';
 
     config.browserContextMenuOnCtrl = true;
 
@@ -104,7 +104,7 @@ CKEDITOR.editorConfig = function( config )
 
     config.fullPage = false;
 
-    config.format_tags = 'p;h1;h2;h3;h4;h5;h6;pre;address;div';
+    config.format_tags = 'p;div;h1;h2;h3;h4;h5;h6;pre;address';
 
     config.resize_dir = 'resize_dir';
 
@@ -119,21 +119,26 @@ CKEDITOR.editorConfig = function( config )
   //config.extraPlugins = 'timestamp';
     config.extraPlugins  = 'justify,find,flash,colorbutton,colordialog,dialogadvtab,'
                          + 'div,font,forms,iframe,indentblock,language,bidi,liststyle,pagebreak,save,'
-                         + 'selectall,showblocks,smiley,templates,codemirror,'
-                         + 'wblink,wbdroplets,youtube,oembed,backup,wbsave';
+                         + 'selectall,showblocks,smiley,templates,codemirror,autogrow,'
+                         + 'wblink,wbdroplets,youtube,oembed,backup,wbsave,wbrelation,wbabout';
 
-    config.removePlugins = 'wsc,link,save,newpage,print,shybutton,syntaxhighlight,preview';
+    config.removePlugins = 'wsc,link,save,newpage,print,shybutton,syntaxhighlight,preview,sourcearea,sourcedialog';
 
     config.browserContextMenuOnCtrl = true;
 
-    config.entities = false;
+    config.entities = true;
 
     config.scayt_autoStartup = false;
 
     // The standard height and width of CKEditor in pixels.
     config.height           = '250';
-    config.width            = '900';
+    config.width            = '100%';
     config.toolbarLocation  = 'top';
+
+    config.autoGrow_minHeight = 250;
+    config.autoGrow_maxHeight = 600;
+    config.autoGrow_bottomSpace = 50;
+    config.autoGrow_onStartup = true;
 
     // Define possibilities of automatic resizing in pixels. Set config.resize_enabled to false to 
     // deactivate resizing.
@@ -141,7 +146,7 @@ CKEDITOR.editorConfig = function( config )
     config.resize_minWidth  = 500;
     config.resize_maxWidth  = 1500;
     config.resize_minHeight = 200;
-    config.resize_maxHeight = 1200;
+    config.resize_maxHeight = 1678;
     config.resize_dir = 'vertical';
 
   config.docType           = '<!DOCTYPE html>';
@@ -275,7 +280,8 @@ CKEDITOR.on( 'instanceReady', function( ev )
         // Insert a line break after the </img> closing tag.
         breakAfterClose : false
     });
-
+/*
+*/
     ev.editor.dataProcessor.htmlFilter.addRules(
     {
         elements:
@@ -284,7 +290,6 @@ CKEDITOR.on( 'instanceReady', function( ev )
                 // Output dimensions of images as width and height
                 if (element.name == 'img') {
                     var style = element.attributes.style;
-
                     if (style) {
                         // Get the width from the style.
                         var match = /(?:^|\s)width\s*:\s*(\d+)px/i.exec(style),
@@ -293,6 +298,7 @@ CKEDITOR.on( 'instanceReady', function( ev )
                         // Get the height from the style.
                         match = /(?:^|\s)height\s*:\s*(\d+)px/i.exec(style);
                         var height = match && match[1];
+console.log( element );
 
                         if (width) {
                             element.attributes.style = element.attributes.style.replace(/(?:^|\s)width\s*:\s*(\d+)px;?/i, '');
@@ -319,8 +325,9 @@ CKEDITOR.on( 'instanceReady', function( ev )
 });
 
 CKEDITOR.on( 'dialogDefinition', function( ev )
-    {
+{
         // Take the dialog name and its definition from the event data.
+        var editor = ev.editor;
         var dialogName = ev.data.name;
         var dialogDefinition = ev.data.definition;
 
@@ -340,7 +347,4 @@ CKEDITOR.on( 'dialogDefinition', function( ev )
             urlField['default'] = 'www.example.com';
         }
 
-    // Ends self closing tags the HTML4 way, like <br>.
-
-
-    });
+    }); // dialogDefinition

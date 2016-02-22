@@ -21,7 +21,6 @@ header('Pragma: no-cache');
 
 // Include the config file
 require ( dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/config.php');
-
 // > wb283 to use new wblink options
 $wb284  = (file_exists(dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/setup.ini.php')) ? true : false;
 
@@ -48,6 +47,28 @@ if(!function_exists('cleanup')) {
    } // end function cleanup
 }
 
+ /**
+  * setPrettyArray()
+  * 
+  * @param integer $bLinefeed
+  * @param integer $iWhiteSpaces
+  * @param integer $iTabs
+  * @return string 
+  */
+ function setPrettyArray($bLinefeed = 1, $iWhiteSpaces = 0, $iTabs = 0) {
+   $sRetVal = "";
+   if($bLinefeed > 0) {
+     $sRetVal .= "\n";
+   }
+   if($iWhiteSpaces > 0) {
+     $sRetVal .= str_repeat(" ", $iWhiteSpaces);
+   }
+   if($iTabs > 0) {
+     $sRetVal .= str_repeat("\t", $iTabs);
+   }
+   return $sRetVal;
+ }
+
 $InternPagesSelectBox = "var InternPagesSelectBox = new Array( ";
 $PagesTitleSelectBox = "var PagesTitleSelectBox = new Array( ";
 
@@ -62,13 +83,13 @@ function getPageTree($parent)
 
     if($resPage = $database->query($sql))
     {
-        while( !false == ($page = $resPage->fetchRow() ) )
+        while( !false == ($page = $resPage->fetchRow( MYSQLI_ASSOC ) ) )
         {
             if(!$admin->page_is_visible($page)) { continue; }
             $menu_title = cleanup( $page['menu_title'] );
             $page_title = cleanup( $page['page_title'] );
             // Stop users from adding pages with a level of more than the set page level limit
-            if($page['level']+1 < PAGE_LEVEL_LIMIT)
+            if($page['level']+1 <= PAGE_LEVEL_LIMIT)
             {
                 $title_prefix = '';
                 for($i = 1; $i <= $page['level']; $i++) { $title_prefix .= ' - '; }
@@ -98,6 +119,7 @@ if( is_readable( WB_PATH.'/modules/news/info.php' ) ) {
   
     $sql = 'SELECT * FROM `'.TABLE_PREFIX.'sections`  WHERE `module` = \'news\' ';
     $newsSections = $database->query($sql);
+
     while($section = $newsSections->fetchRow(MYSQL_ASSOC)){
         $news = $database->query("SELECT `title`, `link`, `page_id`, `post_id` FROM `".TABLE_PREFIX."mod_news_posts` WHERE `active` = 1 AND `section_id` = ".$section['section_id']);
 

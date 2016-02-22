@@ -1,7 +1,9 @@
 <?php
 /*
- * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * CKeditor - The text editor for Internet - http://www.ckeditor.net
  * Copyright (C) 2003-2010 Frederico Caldeira Knabben
+ *
+ * http://www.mixedwaves.com/2010/02/integrating-fckeditor-filemanager-in-ckeditor/
  *
  * == BEGIN LICENSE ==
  *
@@ -24,142 +26,142 @@
 
 function GetFolders( $resourceType, $currentFolder )
 {
-	// Map the virtual path to the local server path.
-	$sServerDir = ServerMapFolder( $resourceType, $currentFolder, 'GetFolders' ) ;
+    // Map the virtual path to the local server path.
+    $sServerDir = ServerMapFolder( $resourceType, $currentFolder, 'GetFolders' ) ;
 
-	// Array that will hold the folders names.
-	$aFolders	= array() ;
+    // Array that will hold the folders names.
+    $aFolders    = array() ;
 
-	$oCurrentFolder = @opendir( $sServerDir ) ;
+    $oCurrentFolder = @opendir( $sServerDir ) ;
 
-	if ($oCurrentFolder !== false)
-	{
-		while ( $sFile = readdir( $oCurrentFolder ) )
-		{
-			if ( $sFile != '.' && $sFile != '..' && is_dir( $sServerDir . $sFile ) )
-				$aFolders[] = '<Folder name="' . ConvertToXmlAttribute( $sFile ) . '" />' ;
-		}
-		closedir( $oCurrentFolder ) ;
-	}
+    if ($oCurrentFolder !== false)
+    {
+        while ( $sFile = readdir( $oCurrentFolder ) )
+        {
+            if ( $sFile != '.' && $sFile != '..' && is_dir( $sServerDir . $sFile ) )
+                $aFolders[] = '<Folder name="' . ConvertToXmlAttribute( $sFile ) . '" />' ;
+        }
+        closedir( $oCurrentFolder ) ;
+    }
 
-	// Open the "Folders" node.
-	echo "<Folders>" ;
+    // Open the "Folders" node.
+    echo "<Folders>" ;
 
-	natcasesort( $aFolders ) ;
-	foreach ( $aFolders as $sFolder )
-		echo $sFolder ;
+    natcasesort( $aFolders ) ;
+    foreach ( $aFolders as $sFolder )
+        echo $sFolder ;
 
-	// Close the "Folders" node.
-	echo "</Folders>" ;
+    // Close the "Folders" node.
+    echo "</Folders>" ;
 }
 
 function GetFoldersAndFiles( $resourceType, $currentFolder )
 {
-	// Map the virtual path to the local server path.
-	$sServerDir = ServerMapFolder( $resourceType, $currentFolder, 'GetFoldersAndFiles' ) ;
+    // Map the virtual path to the local server path.
+    $sServerDir = ServerMapFolder( $resourceType, $currentFolder, 'GetFoldersAndFiles' ) ;
 
-	// Arrays that will hold the folders and files names.
-	$aFolders	= array() ;
-	$aFiles		= array() ;
+    // Arrays that will hold the folders and files names.
+    $aFolders    = array() ;
+    $aFiles        = array() ;
 
-	$oCurrentFolder = @opendir( $sServerDir ) ;
+    $oCurrentFolder = @opendir( $sServerDir ) ;
 
-	if ($oCurrentFolder !== false)
-	{
-		while ( $sFile = readdir( $oCurrentFolder ) )
-		{
-			if ( $sFile != '.' && $sFile != '..' )
-			{
-				if ( is_dir( $sServerDir . $sFile ) )
-					$aFolders[] = '<Folder name="' . ConvertToXmlAttribute( $sFile ) . '" />' ;
-				else
-				{
-					$iFileSize = @filesize( $sServerDir . $sFile ) ;
-					if ( !$iFileSize ) {
-						$iFileSize = 0 ;
-					}
-					if ( $iFileSize > 0 )
-					{
-						$iFileSize = round( $iFileSize / 1024 ) ;
-						if ( $iFileSize < 1 )
-							$iFileSize = 1 ;
-					}
+    if ($oCurrentFolder !== false)
+    {
+        while ( $sFile = readdir( $oCurrentFolder ) )
+        {
+            if ( $sFile != '.' && $sFile != '..' )
+            {
+                if ( is_dir( $sServerDir . $sFile ) )
+                    $aFolders[] = '<Folder name="' . ConvertToXmlAttribute( $sFile ) . '" />' ;
+                else
+                {
+                    $iFileSize = @filesize( $sServerDir . $sFile ) ;
+                    if ( !$iFileSize ) {
+                        $iFileSize = 0 ;
+                    }
+                    if ( $iFileSize > 0 )
+                    {
+                        $iFileSize = round( $iFileSize / 1024 ) ;
+                        if ( $iFileSize < 1 )
+                            $iFileSize = 1 ;
+                    }
 
-					$aFiles[] = '<File name="' . ConvertToXmlAttribute( $sFile ) . '" size="' . $iFileSize . '" />' ;
-				}
-			}
-		}
-		closedir( $oCurrentFolder ) ;
-	}
+                    $aFiles[] = '<File name="' . ConvertToXmlAttribute( $sFile ) . '" size="' . $iFileSize . '" />' ;
+                }
+            }
+        }
+        closedir( $oCurrentFolder ) ;
+    }
 
-	// Send the folders
-	natcasesort( $aFolders ) ;
-	echo '<Folders>' ;
+    // Send the folders
+    natcasesort( $aFolders ) ;
+    echo '<Folders>' ;
 
-	foreach ( $aFolders as $sFolder )
-		echo $sFolder ;
+    foreach ( $aFolders as $sFolder )
+        echo $sFolder ;
 
-	echo '</Folders>' ;
+    echo '</Folders>' ;
 
-	// Send the files
-	natcasesort( $aFiles ) ;
-	echo '<Files>' ;
+    // Send the files
+    natcasesort( $aFiles ) ;
+    echo '<Files>' ;
 
-	foreach ( $aFiles as $sFiles )
-		echo $sFiles ;
+    foreach ( $aFiles as $sFiles )
+        echo $sFiles ;
 
-	echo '</Files>' ;
+    echo '</Files>' ;
 }
 
 function CreateFolder( $resourceType, $currentFolder )
 {
-	if (!isset($_GET)) {
-		global $_GET;
-	}
-	$sErrorNumber	= '0' ;
-	$sErrorMsg		= '' ;
+    if (!isset($_GET)) {
+        global $_GET;
+    }
+    $sErrorNumber    = '0' ;
+    $sErrorMsg        = '' ;
 
-	if ( isset( $_GET['NewFolderName'] ) )
-	{
-		$sNewFolderName = $_GET['NewFolderName'] ;
-		$sNewFolderName = SanitizeFolderName( $sNewFolderName ) ;
+    if ( isset( $_GET['NewFolderName'] ) )
+    {
+        $sNewFolderName = $_GET['NewFolderName'] ;
+        $sNewFolderName = SanitizeFolderName( $sNewFolderName ) ;
 
-		if ( strpos( $sNewFolderName, '..' ) !== FALSE )
-			$sErrorNumber = '102' ;		// Invalid folder name.
-		else
-		{
-			// Map the virtual path to the local server path of the current folder.
-			$sServerDir = ServerMapFolder( $resourceType, $currentFolder, 'CreateFolder' ) ;
+        if ( strpos( $sNewFolderName, '..' ) !== FALSE )
+            $sErrorNumber = '102' ;        // Invalid folder name.
+        else
+        {
+            // Map the virtual path to the local server path of the current folder.
+            $sServerDir = ServerMapFolder( $resourceType, $currentFolder, 'CreateFolder' ) ;
 
-			if ( is_writable( $sServerDir ) )
-			{
-				$sServerDir .= $sNewFolderName ;
+            if ( is_writable( $sServerDir ) )
+            {
+                $sServerDir .= $sNewFolderName ;
 
-				$sErrorMsg = CreateServerFolder( $sServerDir ) ;
+                $sErrorMsg = CreateServerFolder( $sServerDir ) ;
 
-				switch ( $sErrorMsg )
-				{
-					case '' :
-						$sErrorNumber = '0' ;
-						break ;
-					case 'Invalid argument' :
-					case 'No such file or directory' :
-						$sErrorNumber = '102' ;		// Path too long.
-						break ;
-					default :
-						$sErrorNumber = '110' ;
-						break ;
-				}
-			}
-			else
-				$sErrorNumber = '103' ;
-		}
-	}
-	else
-		$sErrorNumber = '102' ;
+                switch ( $sErrorMsg )
+                {
+                    case '' :
+                        $sErrorNumber = '0' ;
+                        break ;
+                    case 'Invalid argument' :
+                    case 'No such file or directory' :
+                        $sErrorNumber = '102' ;        // Path too long.
+                        break ;
+                    default :
+                        $sErrorNumber = '110' ;
+                        break ;
+                }
+            }
+            else
+                $sErrorNumber = '103' ;
+        }
+    }
+    else
+        $sErrorNumber = '102' ;
 
-	// Create the "Error" node.
-	echo '<Error number="' . $sErrorNumber . '" />' ;
+    // Create the "Error" node.
+    echo '<Error number="' . $sErrorNumber . '" />' ;
 }
 
 // Notice the last paramter added to pass the CKEditor callback function
@@ -286,4 +288,3 @@ function FileUpload( $resourceType, $currentFolder, $sCommand, $CKEcallback = ''
     }
     exit ;
 }
-?>
