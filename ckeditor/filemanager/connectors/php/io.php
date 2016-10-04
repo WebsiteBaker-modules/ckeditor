@@ -309,14 +309,14 @@ function SendCKEditorResults ($errorNumber, $CKECallback, $fileUrl, $fileName, $
 <script type="text/javascript">
 (function(){var d=document.domain;while (true){try{var A=window.parent.document.domain;break;}catch(e) {};d=d.replace(/.*?(?:\.|$)/,'');if (d.length==0) break;try{document.domain=d;}catch (e){break;}}})();
 EOF;
- 
+
     if ($errorNumber && $errorNumber != 201) {
-        $fileUrl = "";        
+        $fileUrl = "";
         $fileName= "";
     }
- 
+
     $msg = "";
- 
+
     switch ($errorNumber )
     {
         case 0 :
@@ -335,11 +335,11 @@ EOF;
             $msg = 'Error on file upload. Error number: ' + $errorNumber ;
             break ;
     }
- 
- 
+
+
   $rpl = array( '\\' => '\\\\', '"' => '\\"' ) ;
-  echo 'window.parent.CKEDITOR.tools.callFunction("'. $CKECallback. '","'. strtr($fileUrl, $rpl). '", "'. strtr( $msg, $rpl). '");' ; 
- 
+  echo 'window.parent.CKEDITOR.tools.callFunction("'. $CKECallback. '","'. strtr($fileUrl, $rpl). '", "'. strtr( $msg, $rpl). '");' ;
+
   echo '</script>';
 }
 

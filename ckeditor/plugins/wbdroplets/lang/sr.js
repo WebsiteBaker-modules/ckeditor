@@ -4,11 +4,11 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 */
 CKEDITOR.plugins.setLang( 'wbdroplets', 'sr', {
     wbdroplets: {
-        toolbar: 'WB-Droplets einfügen',
-        menu: 'Droplet-Eigenschaften',
+        toolbar: 'Insert WB Droplets into page',
+        menu: 'Droplet-properties',
         title: 'WB-Droplets',
-        name: 'Droplet Name',
-        errorName: 'Bitte geben Sie den Namen des Droplets ein'
+        name: 'Droplet name',
+        errorName: 'Please insert a name for the Droplet'
     },
-    editDroplet: 'Droplet bearbeiten'
+    editDroplet: 'edit Droplet'
 });

@@ -47,6 +47,12 @@ CKEDITOR.editorConfig = function( config )
         { name: 'colors', items : [ 'TextColor','BGColor' ] },
         { name: 'tools',  items : [ 'Maximize', 'ShowBlocks','-','About' ] }
     ];
+
+  config.toolbar_WB_Mini = [
+            ['Source','Cut','Copy'],['PasteText','PasteFromWord'],['Undo','Redo','-','RemoveFormat'],['Wbdroplets','Wblink','Unlink','Anchor'],
+            ['TextColor','BGColor'],['Bold','Italic','Underline','Strike'],['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],
+            ['Styles','Format','Font','FontSize'],['NumberedList','BulletedList','-','Blockquote','CreateDiv'],['About']];
+
   config.toolbar_WB_Basic = [
             ['Source','Preview'],['Cut','Copy','Paste','PasteText','PasteFromWord'],['Image','Flash','Table','HorizontalRule'],['Wbdroplets','Wblink','Unlink','Anchor'],['Undo','Redo','-','SelectAll','RemoveFormat'],['Maximize','ShowBlocks','-','Code','About'],'/',
             ['Styles','Format','Font','FontSize'],['TextColor','BGColor'],['Bold','Italic','Underline','Strike'],['JustifyLeft','JustifyCenter','JustifyRight','JustifyBlock'],['NumberedList','BulletedList','-','Outdent','Indent','Blockquote','CreateDiv']];
@@ -106,8 +112,6 @@ CKEDITOR.editorConfig = function( config )
 
     config.format_tags = 'p;div;h1;h2;h3;h4;h5;h6;pre;address';
 
-    config.resize_dir = 'resize_dir';
-
     config.autoParagraph = true;
 
     /* The skin to load. It may be the name of the skin folder inside the editor installation path,
@@ -135,11 +139,10 @@ CKEDITOR.editorConfig = function( config )
     config.width            = '100%';
     config.toolbarLocation  = 'top';
 
-    config.autoGrow_minHeight = 250;
+    config.autoGrow_minHeight = 200;
     config.autoGrow_maxHeight = 600;
     config.autoGrow_bottomSpace = 50;
     config.autoGrow_onStartup = true;
-
     // Define possibilities of automatic resizing in pixels. Set config.resize_enabled to false to 
     // deactivate resizing.
     config.resize_enabled   = true;
@@ -147,7 +150,7 @@ CKEDITOR.editorConfig = function( config )
     config.resize_maxWidth  = 1500;
     config.resize_minHeight = 200;
     config.resize_maxHeight = 1678;
-    config.resize_dir = 'vertical';
+    config.resize_dir = 'both';
 
   config.docType           = '<!DOCTYPE html>';
 
@@ -182,6 +185,7 @@ CKEDITOR.editorConfig = function( config )
     *  Uncommenting this line doesn't mean the user will not be able to type PHP code in the source.
     *  This kind of prevention must be done in the server side, so just leave this line as is. */ 
     config.protectedSource.push(/<\?[\s\S]*?\?>/g); // PHP Code
+//    config.protectedSource.push(/\[\[[\s\S]*?\]\]/g); //  droplets
 
     //disable ckes Advanced Content Filter (ACF) to avoid wblinks to be filtered?
     config.allowedContent = true;

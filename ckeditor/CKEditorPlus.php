@@ -158,10 +158,6 @@ class CKEditorPlus extends CKEditor
         } else {
             $this->config[$key] = $aPath;
         }
-/*
-print '<pre  class="mod-pre rounded">function <span>'.__FUNCTION__.'( '.''.' );</span>  filename: <span>'.basename(__FILE__).'</span>  line: '.__LINE__.' -> <br />'; 
-print_r( $this->config ); print '</pre>'; flush (); //  ob_flush();;sleep(10); die(); 
-*/
 
     }
 
@@ -173,11 +169,11 @@ print_r( $this->config ); print '</pre>'; flush (); //  ob_flush();;sleep(10); d
  *    @return   string    The "editor"-JS HTML code
  *
  */
-    public function to_HTML( $name, &$content  ) {
-        $old_return = $this->returnOutput;
-        $this->returnOutput = true;
-        $temp_HTML= $this->editor( $name, $content  );
-        $this->returnOutput = $old_return;
+    public function to_HTML( $name, &$content, $config) {
+        $old_return = $this->bOutputAsBuffer;
+        $this->bOutputAsBuffer = true;
+        $temp_HTML = $this->editor( $name, $content, $config);
+        $this->bOutputAsBuffer = $old_return;
         if (true === $this->pretty) {
             $temp_HTML = str_replace (", ", ",\n ", $temp_HTML);
             $temp_HTML = "\n\n\n".$temp_HTML."\n\n\n";

@@ -24,7 +24,15 @@
  *
  *
  */
-function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '250px', $toolbar = false) {
+function show_wysiwyg_editor(
+    $name,
+    $id,
+    $content,
+    $width = '100%',
+    $height = '250px',
+    $toolbar = false,
+    $OutputAsBuffer=false
+    ) {
     global $database,$admin;
 
     $modAbsPath = str_replace('\\','/',dirname(__FILE__));
@@ -53,18 +61,18 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
     require ( $modAbsPath.'/info.php' );
 /**
  * http://docs.ckeditor.com/#!/api/CKEDITOR.config
- * 
+ *
  * @param boolean
  * true: set some config.index by wb_config.js
  * false: set some config['index'] by include.php
- * 
+ *
  * possible config.indexes for setting in wb_config.js
  * that were normaly set in include.php
  * format_tags, resize_dir, autoParagraph, skin, toolbar,
  * extraPlugins, removePlugins, browserContextMenuOnCtrl, entities,
- * scayt_autoStartup, 
- * 
- * 
+ * scayt_autoStartup,
+ *
+ *
  */
     $bWbConfigSetting = false;
 
@@ -73,8 +81,11 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
  *    But first - we've got to revamp this pretty old class a little bit.
  *
  */
-    if ( !class_exists('CKEditor', false ))     { require ($ckeAbsPath.'ckeditor.php' ); }
-    if ( !class_exists('CKEditorPlus', false )) { require ($ckeAbsPath.'CKEditorPlus.php' ); }   // $ckeAbsPath ends with /
+if (!file_exists($ckeAbsPath.'CKEditor.php')) {
+    throw new RuntimeException('Error loading editor file CKEditor.php, please check configuration');
+}
+    if ( !class_exists('CKEditor', false ))     { require ($ckeAbsPath.'CKEditor.php'); }
+    if ( !class_exists('CKEditorPlus', false )) { require ($ckeAbsPath.'CKEditorPlus.php'); }   // $ckeAbsPath ends with /
 
     $ckeditor = new CKEditorPlus( $ckeRelPath );
 /******************************************************************************************/
@@ -87,7 +98,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
 
     $temp = '';
     if (isset($admin->page_id)) {
-        $query = "SELECT `template` from `".TABLE_PREFIX."pages` where `page_id`='".$page_id."'";
+        $query = "SELECT `template` from `".TABLE_PREFIX."pages` where `page_id`='".intval($page_id)."'";
         $temp = $database->get_one( $query );
     }
     $templateFolder = ($temp == "") ? DEFAULT_TEMPLATE : $temp;
@@ -114,17 +125,17 @@ $ckeditor->config['language'] = strtolower( (@LANGUAGE ?: 'en') );
  */
 if( !$bWbConfigSetting ) { $ckeditor->config['format_tags'] = 'p;div;h1;h2;h3;h4;h5;h6;pre'; }
 
-if( !$bWbConfigSetting ) { $ckeditor->config['resize_dir'] = 'vertical'; }
+if( !$bWbConfigSetting ) { $ckeditor->config['resize_dir'] = 'both'; }
 
 if( !$bWbConfigSetting ) { $ckeditor->config['autoParagraph'] = true; }
 
 /**
 * The skin to load. It may be the name of the skin folder inside the editor installation path,
 * or the name and the path separated by a comma.
-* Available skins: moono, moonocolor
-* 
+* Available skins: moono, moonocolor, kama, bootstrapck
+*
 */
-if( !$bWbConfigSetting ) { $ckeditor->config['skin'] = 'moono'; }
+if( !$bWbConfigSetting ) { $ckeditor->config['skin'] = 'moonocolor'; }
 
 /**
  *    Additional test for wysiwyg-admin
@@ -134,22 +145,23 @@ $ckeditor->looking_for_wysiwyg_admin( $database );
 
 /**
  *    Define all extra CKEditor plugins in _yourwb_/modules/ckeditor067/ckeditor/plugins here
- * 
+ *
  */
-if( !$bWbConfigSetting ) { 
+if( !$bWbConfigSetting ) {
     $ckeditor->config['extraPlugins'] = 'justify,find,flash,colorbutton,colordialog,dialogadvtab,autogrow,'
-                                      . 'div,font,forms,iframe,indentblock,language,bidi,liststyle,pagebreak,save,'
+                                      . 'div,font,forms,iframe,indentblock,bidi,liststyle,pagebreak,save,'
                                       . 'selectall,showblocks,smiley,templates,codemirror,syntaxhighlight,'
-                                      . 'wblink,wbdroplets,youtube,oembed,backup,wbsave,wbabout,wbrelation'
+                                      . 'wblink,wbdroplets,youtube,oembed,backup,wbabout,wbrelation'
                                       .'';
 
-    $ckeditor->config['removePlugins'] = 'link,wsc,save,newpage,print,shybutton,preview,'
-                                        .'sourcearea,sourcedialog,imageresponsive,image2';
+    $ckeditor->config['removePlugins'] = 'link,wsc,save,newpage,print,shybutton,preview,wbsave,'
+                                        .'sourcearea,sourcedialog,imageresponsive,image2,language';
  }
 
 if( !$bWbConfigSetting ) { $ckeditor->config['uiColor'] = '#BFD7EB'; }
 
-if ( $toolbar && !$bWbConfigSetting ) $ckeditor->config['toolbar'] = $toolbar;
+//if ($toolbar && !$bWbConfigSetting) {$ckeditor->config['toolbar'] = $toolbar;}
+if ($toolbar) {$ckeditor->config['toolbar'] = $toolbar;}
 
 /**
  *  Whether to show the browser native context menu when the Ctrl
@@ -163,9 +175,27 @@ if( !$bWbConfigSetting ) { $ckeditor->config['browserContextMenuOnCtrl'] = true;
  *    HTML source string.
  *
  */
-$ckeditor->returnOutput = false;
+$ckeditor->bOutputAsBuffer = $OutputAsBuffer;
 
 if( !$bWbConfigSetting ) { $ckeditor->config['entities'] = false; }
+
+/**
+ * Sets the DOCTYPE to be used when loading the editor content as HTML.
+ * <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+ * <!DOCTYPE html>
+ */
+    $ckeditor->config['docType'] = '<!DOCTYPE html>';
+
+    /**
+     *
+     * Define Marmots CKEditor plugin in ../ckeditor/plugins/backup
+     * backup_on_start true or false
+     * backup_save_delay in ms
+     *
+     */
+    $ckeditor->config['backup_on_start'] = true;
+    $ckeditor->config['backup_save_delay'] = 500;
+
 
 /**
  *    SCAYT
@@ -173,7 +203,7 @@ if( !$bWbConfigSetting ) { $ckeditor->config['entities'] = false; }
  *
  */
     $ckeditor->config['scayt_sLang'] = strtolower(LANGUAGE)."_".(LANGUAGE == "EN" ? "US" : LANGUAGE);
-if( !$bWbConfigSetting ) { 
+if( !$bWbConfigSetting ) {
     $ckeditor->config['scayt_autoStartup'] = false;
  }
 /**
@@ -255,39 +285,47 @@ $ckeditor->resolve_path(
  */
 if (isset($database) && $ckeditor->wysiwyg_admin_exists ) {
     $data = null;
-    $query = "SELECT * from `".TABLE_PREFIX."mod_editor_admin` where `editor`='ckeditor'";
-    if (method_exists($database,'doQuery') ) {
+    $query = 'SELECT * from `'.TABLE_PREFIX.'mod_editor_admin` WHERE `editor`="ckeditor"';
+    if (method_exists($database,'doQuery')) {
         if (($result = $database->query($query))) {
-            $data = $result->fetchArray( MYSQLI_ASSOC );
+            $data = $result->fetchArray(MYSQLI_ASSOC);
         }
     } else {
         if (($result = $database->query($query))) {
-            $data = $result->fetchRow( MYSQLI_ASSOC );
+            $data = $result->fetchRow(MYSQLI_ASSOC);
         }
     }
 // import data into $ckeditor->config
     if ( $data ) {
         foreach ($data as $key => $value) {
-            $ckeditor->config[$key] = $value; 
-//            $ckeditor->config['toolbar'] = $ckeditor->config['menu'];
+            $ckeditor->config[$key] = $value;
+            if(!$ckeditor->config[$key]){unset($ckeditor->config[$key]);}
         }
     }
 }
-
-
-if( !$bWbConfigSetting ) { 
+if (isset($ckeditor->config['menu'])) {$ckeditor->config['toolbar'] = $ckeditor->config['menu'];}
+/*
+if( !$bWbConfigSetting ) {
     if ( (!$ckeditor->wysiwyg_admin_exists) || ($ckeditor->force) ) {
-        $ckeditor->config['height'] = $height;
-        $ckeditor->config['width']  = $width;
     }
-
-    $ckeditor->config['autoGrow_minHeight'] = 150;
-    $ckeditor->config['autoGrow_maxHeight'] = $height;
-    $ckeditor->config['autoGrow_bottomSpace'] = 50;
-    $ckeditor->config['autoGrow_onStartup'] = true;
  }
+*/
+$ckeditor->config['height'] = $height;
+$ckeditor->config['width']  = $width;
+
+$ckeditor->config['autoGrow_minHeight'] =  200;
+$ckeditor->config['autoGrow_maxHeight'] = $height;
+$ckeditor->config['autoGrow_bottomSpace'] = 50;
+$ckeditor->config['autoGrow_onStartup'] = true;
 
 $ckeditor->reverse_htmlentities($content);
 
-echo $ckeditor->to_HTML( $name, $content, $ckeditor->config);
+$output = $ckeditor->to_HTML( $name, $content, $ckeditor->config);
+
+if (!$OutputAsBuffer){
+    echo $output;
+} else {
+    return $output;
+}
+
 }

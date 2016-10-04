@@ -17,7 +17,7 @@
 {
     CKEDITOR.plugins.add( 'wbrelation',
     {
-        lang :
+        lang : 
         [
             CKEDITOR.config.defaultLanguage,
             CKEDITOR.lang.detect(CKEDITOR.config.language )
@@ -36,12 +36,14 @@
 
     CKEDITOR.on( 'dialogDefinition', function( ev )
     {
-        var dialog = ev.data;
-        var dialogName = dialog.name;
-        var dialogDefinition = dialog.definition;
-        var editor = ev.editor;
+        var dialog = ev.data,
+            dialogName = dialog.name,
+            dialogDefinition = dialog.definition,
+            editor = ev.editor,
+            lang = editor.lang.wbrelation;
+
     // editor.on( 'commit', function(ev) { console.log( ev ) });
-console.info( dialogDefinition ) ;
+console.info( lang ) ;
         var IMAGE = 1,
             LINK = 2,
             PREVIEW = 4,
@@ -86,7 +88,7 @@ console.info( dialogDefinition ) ;
             var cssField = advTab.get( 'txtGenClass' ); //CSS Classes
             cssField['default'] = 'img-responsive';
 
-console.log( cssField );
+//console.log( cssField );
 //console.info( this );
 
             linkTab.add (

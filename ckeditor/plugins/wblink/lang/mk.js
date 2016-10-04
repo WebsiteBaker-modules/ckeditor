@@ -61,7 +61,7 @@ CKEDITOR.plugins.setLang( 'wblink', 'mk', {
 	toolbar: 'Link', // MISSING
 	type: 'Link Type', // MISSING
 	unlink: 'Unlink', // MISSING
-	upload: 'Upload' // MISSING,
+	upload: 'Upload', // MISSING,
 	toWb: 'WB-Link',
 	wbPage: 'WB-Page',
 	newsItem: 'Direkt - Link',

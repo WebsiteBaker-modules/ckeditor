@@ -19,7 +19,7 @@ header('Pragma: no-cache');
     to wbdroplets plugin.
 */
 
-require ( dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/config.php');
+if ( !defined( 'WB_PATH' ) ){ require ( dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/config.php'); }
 
 $wb284  = (file_exists(dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/setup.ini.php')) ? true : false;
 

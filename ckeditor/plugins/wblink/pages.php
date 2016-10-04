@@ -20,9 +20,9 @@ header('Pragma: no-cache');
 */
 
 // Include the config file
-require ( dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/config.php');
+if ( !defined( 'WB_PATH' ) ){ require ( dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/config.php'); }
 // > wb283 to use new wblink options
-$wb284  = (file_exists(dirname(dirname(dirname(dirname(dirname(__DIR__))))).'/setup.ini.php')) ? true : false;
+$wb284  = (file_exists(WB_PATH.'/setup.ini.php')) ? true : false;
 
 // Create new admin object
 require(WB_PATH.'/framework/class.admin.php');
@@ -72,34 +72,30 @@ if(!function_exists('cleanup')) {
 $InternPagesSelectBox = "var InternPagesSelectBox = new Array( ";
 $PagesTitleSelectBox = "var PagesTitleSelectBox = new Array( ";
 
-// Function to generate page list
+
 function getPageTree($parent)
 {
     global $admin, $database,$InternPagesSelectBox,$PagesTitleSelectBox;
-    $sql  = 'SELECT * FROM `'.TABLE_PREFIX.'pages` ';
-    $sql .= 'WHERE `parent`= '.(int)$parent.' ';
-    $sql .= ((PAGE_TRASH != 'inline') ?  'AND `visibility` != \'deleted\' ' : ' ');
-    $sql .= 'ORDER BY `position` ASC';
-
-    if($resPage = $database->query($sql))
-    {
-        while( !false == ($page = $resPage->fetchRow( MYSQLI_ASSOC ) ) )
-        {
-            if(!$admin->page_is_visible($page)) { continue; }
+    $sql  = 'SELECT * FROM `'.TABLE_PREFIX.'pages` '
+          . 'WHERE `parent`= '.(int)$parent.' AND ' 
+          .    '`level`<='.PAGE_LEVEL_LIMIT.' '
+          .    ((PAGE_TRASH != 'inline') ?  'AND `visibility` != \'deleted\' ' : ' ')
+          . 'ORDER BY `position` ASC';
+    if (($resPage = $database->query($sql))) {
+        while (!(false == ($page = $resPage->fetchRow( MYSQLI_ASSOC )))) {
+            if (!$admin->page_is_visible($page)) { continue; }
             $menu_title = cleanup( $page['menu_title'] );
             $page_title = cleanup( $page['page_title'] );
-            // Stop users from adding pages with a level of more than the set page level limit
-            if($page['level']+1 <= PAGE_LEVEL_LIMIT)
-            {
-                $title_prefix = '';
-                for($i = 1; $i <= $page['level']; $i++) { $title_prefix .= ' - '; }
-                $InternPagesSelectBox .= "new Array( '".$title_prefix.$menu_title."', '[wblink".$page['page_id']."]'), ";
-                $PagesTitleSelectBox .= "new Array( '".$page_title."', '[wblink".$page['page_id']."]'), ";
+            $title_prefix = str_repeat(' - ', $page['level']);
+            $InternPagesSelectBox .= "new Array( '".$title_prefix.$menu_title."', '[wblink".$page['page_id']."]'), ";
+            $PagesTitleSelectBox .= "new Array( '".$page_title."', '[wblink".$page['page_id']."]'), ";
+            if($page['level'] < PAGE_LEVEL_LIMIT) {
+                getPageTree($page['page_id']);
             }
-        getPageTree($page['page_id']);
         }
     }
 }
+// end of function
 
 getPageTree(0);
 
@@ -120,13 +116,13 @@ if( is_readable( WB_PATH.'/modules/news/info.php' ) ) {
     $sql = 'SELECT * FROM `'.TABLE_PREFIX.'sections`  WHERE `module` = \'news\' ';
     $newsSections = $database->query($sql);
 
-    while($section = $newsSections->fetchRow(MYSQL_ASSOC)){
+    while($section = $newsSections->fetchRow(MYSQLI_ASSOC)){
         $news = $database->query("SELECT `title`, `link`, `page_id`, `post_id` FROM `".TABLE_PREFIX."mod_news_posts` WHERE `active` = 1 AND `section_id` = ".$section['section_id']);
 
         $ModuleList .= "ModuleList[".$section['page_id']."] = 'News';";
         $NewsItemsSelectBox .= "NewsItemsSelectBox[".$section['page_id']."] = new Array();";
 
-        while($item = $news->fetchRow(MYSQL_ASSOC)) {
+        while($item = $news->fetchRow(MYSQLI_ASSOC)) {
           $item['title'] = preg_replace($wblink_allowed_chars , "" , $item['title']);
           if ($wb284)
               $NewsItemsSelectBox .= "NewsItemsSelectBox[".$section['page_id']."][NewsItemsSelectBox[".$section['page_id']."].length] = new Array('".(addslashes($item['title']))."', '[wblink".$item['page_id'].'?addon=news&item='.$item['post_id']."]');";
@@ -140,16 +136,16 @@ if( is_readable( WB_PATH.'/modules/topics/info.php' ) ) {
     $sql = 'SELECT * FROM `'.TABLE_PREFIX.'sections`  WHERE `module` = \'topics\' ';
     $topicsSections = $database->query($sql);
 
-    while($section = $topicsSections->fetchRow(MYSQL_ASSOC)){
+    while($section = $topicsSections->fetchRow(MYSQLI_ASSOC)){
         $topics = $database->query("SELECT `title`, `link`, `page_id`, `topic_id` FROM `".TABLE_PREFIX."mod_topics` WHERE `active` > 0 AND `section_id` = ".$section['section_id']);
 
         $ModuleList .= "ModuleList[".$section['page_id']."] = 'Topics';";
         $NewsItemsSelectBox .= "NewsItemsSelectBox[".$section['page_id']."] = new Array();";
 
-        while($item = $topics->fetchRow(MYSQL_ASSOC)) {
+        while($item = $topics->fetchRow(MYSQLI_ASSOC)) {
           $item['title'] = preg_replace($wblink_allowed_chars , "" , $item['title']);
 
-          if ($wb284 && file_exists( dirname(dirname(dirname(dirname(dirname(__DIR__)))))."/modules/topics/WbLink.php"  ) )
+          if ($wb284 && file_exists( WB_PATH."/modules/topics/WbLink.php"  ) )
               $NewsItemsSelectBox .= "NewsItemsSelectBox[".$section['page_id']."][NewsItemsSelectBox[".$section['page_id']."].length] = new Array('".(addslashes($item['title']))."', '[wblink".$item['page_id'].'?addon=topics&item='.$item['topic_id']."]');";
             else
                 $NewsItemsSelectBox .= "NewsItemsSelectBox[".$section['page_id']."][NewsItemsSelectBox[".$section['page_id']."].length] = new Array('".(addslashes($item['title']))."', '".WB_URL.PAGES_DIRECTORY."/topics/".(addslashes($item['link'])).PAGE_EXTENSION."');";
@@ -161,16 +157,16 @@ if( is_readable( WB_PATH.'/modules/bakery/info.php' ) ) {
     $sql = 'SELECT * FROM `'.TABLE_PREFIX.'sections`  WHERE `module` = \'bakery\' ';
     $bakerySections = $database->query($sql);
 
-    while($section = $bakerySections->fetchRow(MYSQL_ASSOC)){
+    while($section = $bakerySections->fetchRow(MYSQLI_ASSOC)){
       $bakery = $database->query("SELECT `title`, `link`, `page_id`, `item_id` FROM `".TABLE_PREFIX."mod_bakery_items` WHERE `active`=1 AND `section_id` = ".$section['section_id']);
 
       $ModuleList .= "ModuleList[".$section['page_id']."] = 'Bakery';";
       $NewsItemsSelectBox .= "NewsItemsSelectBox[".$section['page_id']."] = new Array();";
 
-      while($item = $bakery->fetchRow(MYSQL_ASSOC)) {
+      while($item = $bakery->fetchRow(MYSQLI_ASSOC)) {
           $item['title'] = preg_replace($wblink_allowed_chars , "" , $item['title']);
 
-          if ($wb284 && file_exists(dirname(dirname(dirname(dirname(dirname(__DIR__)))))."/modules/bakery/WbLink.php"))
+          if ($wb284 && file_exists(WB_PATH."/modules/bakery/WbLink.php"))
             $NewsItemsSelectBox .= "NewsItemsSelectBox[".$section['page_id']."][NewsItemsSelectBox[".$section['page_id']."].length] = new Array('".(addslashes($item['title']))."', '[wblink".$item['page_id'].'?addon=bakery&item='.$item['item_id']."]');";  
         else
             $NewsItemsSelectBox .= "NewsItemsSelectBox[".$section['page_id']."][NewsItemsSelectBox[".$section['page_id']."].length] = new Array('".(addslashes($item['title']))."', '".WB_URL.PAGES_DIRECTORY.(addslashes($item['link'])).PAGE_EXTENSION."');";

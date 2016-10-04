@@ -109,7 +109,7 @@ CKEDITOR.plugins.add( 'backup',{
                 }
                 restored = false;
             });
-            div.innerHTML = '<select style="margin-top:-5px;" id="backuper_'+editor.name+'"></select>&nbsp;<input type="image" value="del" onclick="CKEDITOR.instances[\''+editor.name+'\'].backup(\'del\'); return false;" src="'+CKEDITOR.basePath+'plugins/backup/images/clear.png"/>';
+            div.innerHTML = '<select style="margin-top:-5px;" id="backuper_'+editor.name+'"></select>&nbsp;<input style=" width: 16px;" type="image" value="del" onclick="CKEDITOR.instances[\''+editor.name+'\'].backup(\'del\'); return false;" src="'+CKEDITOR.basePath+'plugins/backup/images/clear.png"/>';
             //div.onchange = editor.restore; IE8 problems
             CKEDITOR.document.getById( editor.ui.spaceId?editor.ui.spaceId("bottom"): 'cke_bottom_'+editor.name ).append(new CKEDITOR.dom.node(div));
             select = CKEDITOR.document.getById( 'backuper_'+editor.name );

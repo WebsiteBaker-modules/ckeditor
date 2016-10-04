@@ -9,7 +9,7 @@ For licensing, see LICENSE.md or http://ckeditor.com/license
 .cke_combo__style .cke_combo_text, 
 .cke_combo__fontsize .cke_combo_text
 {
-    width: 5em !important;
+    width: auto !important;
 }
 
 /* "Font Size" panel size */

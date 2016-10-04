@@ -1,9 +1,9 @@
 ﻿/**
- * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
+'use strict';
  */
 
-// 'use strict';
 
 ( function() {
     CKEDITOR.plugins.add( 'wblink', {
@@ -15,8 +15,8 @@
         hidpi: true, // %REMOVE_LINE_CORE%
         onLoad: function() {
             // Add the CSS styles for anchor placeholders.
-            var iconPath = CKEDITOR.getUrl( this.path + 'images' + ( CKEDITOR.env.hidpi ? '/hidpi' : '' ) + '/anchor.png' );
-            var baseStyle = 'background:url(' + CKEDITOR.getUrl( this.path + 'images/anchor.png' ) + ') no-repeat %1 center; border:1px dotted #00f;background-size:16px;';
+            var iconPath = CKEDITOR.getUrl( this.path + 'images' + ( CKEDITOR.env.hidpi ? '/hidpi' : '' ) + '/anchor.png' ),
+                baseStyle = 'background:url(' + CKEDITOR.getUrl( this.path + 'images/anchor.png' ) + ') no-repeat %1 center; border:1px dotted #00f;background-size:16px;';
 
             var template = '.%2 a.cke_anchor,' +
                 '.%2 a.cke_anchor_empty' +
@@ -109,14 +109,13 @@
             // If event was cancelled, link passed in event data will not be selected.
             editor.on( 'doubleclick', function( evt ) {
                 // Make sure both links and anchors are selected (#11822).
-//                if ( evt.data.link )
                 if ( evt.data.dialog in { link: 1, anchor: 1 } && evt.data.link )
                     editor.getSelection().selectElement( evt.data.link );
             }, null, null, 20 );
 
             // If the "menu" plugin is loaded, register the menu items.
             if ( editor.addMenuItems ) {
-                editor.addMenuItems({
+                editor.addMenuItems( {
                     anchor: {
                         label: editor.lang.wblink.anchor.menu,
                         command: 'anchor',
@@ -298,11 +297,11 @@
      */
     CKEDITOR.plugins.wblink = {
         /**
-         * Get the surrounding link element of current selection.
+         * Get the surrounding link element of the current selection.
          *
          *        CKEDITOR.plugins.link.getSelectedLink( editor );
          *
-         *        // The following selection will all return the link element.
+         *        // The following selections will all return the link element.
          *
          *        <a href="#">li^nk</a>
          *        <a href="#">[link]</a>
@@ -376,7 +375,7 @@
         },
 
         /**
-         * Opera and WebKit don't make it possible to select empty anchors. Fake
+         * Opera and WebKit do not make it possible to select empty anchors. Fake
          * elements must be used for them.
          *
          * @readonly
@@ -403,7 +402,7 @@
 
         /**
          * Returns an element representing a real anchor restored from a fake anchor.
-         * 
+         *
          * @param {CKEDITOR.editor} editor
          * @param {CKEDITOR.dom.element} element
          * @returns {CKEDITOR.dom.element} Restored anchor element or nothing if the 
@@ -553,9 +552,9 @@
         },
 
         /**
-         * Converts link data into an object which consists of attributes to be set
-         * (with their values) and an array of attributes to be removed. This method
-         * can be used to synthesise or to update any link element with the given data.
+         * Converts link data produced by {@link #parseLinkAttributes} into an object which consists
+         * of attributes to be set (with their values) and an array of attributes to be removed.
+         * This method can be used to compose or to update any link element with the given data.
          *
          * @since 4.4
          * @param {CKEDITOR.editor} editor
@@ -582,7 +581,7 @@
             // Compose the URL.
             switch ( data.type ) {
                 case 'url':
-                    var protocol = ( data.url && data.url.protocol != undefined ) ? data.url.protocol : 'http://',
+                    var protocol = ( data.url && data.url.protocol !== undefined ) ? data.url.protocol : 'http://',
                         url = ( data.url && CKEDITOR.tools.trim( data.url.url ) ) || '';
 
                     set[ 'data-cke-saved-href' ] = ( url.indexOf( '/' ) === 0 ) ? url : protocol + url;
@@ -622,15 +621,16 @@
 
                             if ( emailProtection == 'encode' ) {
                                 linkHref = [
-                                    'javascript:void(location.href=\'mailto:\'+',
+                                    'javascript:void(location.href=\'mailto:\'+', // jshint ignore:line
                                     protectEmailAddressAsEncodedString( address )
                                 ];
                                 // parameters are optional.
                                 argList && linkHref.push( '+\'', escapeSingleQuote( argList ), '\'' );
 
                                 linkHref.push( ')' );
-                            } else
+                            } else {
                                 linkHref = [ 'mailto:', address, argList ];
+                            }
 
                             break;
                         default:
@@ -639,7 +639,7 @@
                             email.name = nameAndDomain[ 0 ];
                             email.domain = nameAndDomain[ 1 ];
 
-                            linkHref = [ 'javascript:', protectEmailLinkAsFunction( editor, email ) ];
+                            linkHref = [ 'javascript:', protectEmailLinkAsFunction( editor, email ) ]; // jshint ignore:line
                     }
 
                     set[ 'data-cke-saved-href' ] = linkHref.join( '' );
@@ -672,8 +672,9 @@
                     onclickList.push( featureList.join( ',' ), '\'); return false;' );
                     set[ 'data-cke-pa-onclick' ] = onclickList.join( '' );
                 }
-                else if ( data.target.type != 'notSet' && data.target.name )
+                else if ( data.target.type != 'notSet' && data.target.name ) {
                     set.target = data.target.name;
+                }
             }
 
             // Advanced attributes.

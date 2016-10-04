@@ -1,24 +1,24 @@
 ﻿/**
- * @license Copyright (c) 2003-2014, CKSource - Frederico Knabben. All rights reserved.
+ * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-// 'use strict';
+//    'use strict';
 
 ( function() {
     CKEDITOR.dialog.add( 'wblink', function( editor ) {
         var plugin = CKEDITOR.plugins.wblink;
-    
+
         // Handles the event when the "Target" selection box is changed.
         var targetChanged = function() {
                 var dialog = this.getDialog(),
                     popupFeatures = dialog.getContentElement( 'target', 'popupFeatures' ),
                     targetName = dialog.getContentElement( 'target', 'linkTargetName' ),
                     value = this.getValue();
-    
+
                 if ( !popupFeatures || !targetName )
                     return;
-    
+
                 popupFeatures = popupFeatures.getElement();
                 popupFeatures.hide();
                 targetName.setValue( '' );
@@ -132,8 +132,7 @@
                     ],
                     onChange: linkTypeChanged,
                     setup: function( data ) {
-//                        if ( data.type )
-                            this.setValue( data.type || 'url' );
+                        this.setValue( data.type || 'url' );
                     },
                     commit: function( data ) {
                         data.type = this.getValue();

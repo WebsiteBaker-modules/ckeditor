@@ -69,3 +69,5 @@ CKEDITOR.plugins.setLang( 'wblink', 'hi', {
 	selectTopics: 'Please select a topics-item',
 	selectBakery: 'Please select a bakery-item',
 	noNews: 'no news page selected'
+    });
+        
