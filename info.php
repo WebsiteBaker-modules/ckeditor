@@ -22,10 +22,10 @@ if(defined('WB_PATH') == false) { die('Illegale file access /'.basename(__DIR__)
 /* -------------------------------------------------------- */
 
 $module_directory   = 'ckeditor';
-$module_name        = 'CKEditor v4.5.10';
+$module_name        = 'CKEditor v4.6.0';
 $module_function    = 'WYSIWYG';
-$module_version     = '4.5.10';
+$module_version     = '4.6.0';
 $module_platform    = '2.8.3 SP6';
 $module_author      = 'Michael Tenschert, Dietrich Roland Pehlke, erpe, WebBird, Marmot, Luisehahne';
 $module_license     = '<a target="_blank" href="http://www.gnu.org/licenses/lgpl.html">LGPL</a>';
-$module_description = 'includes CKEditor 4.5.10 Standard, CKE allows editing content and can be integrated in frontend and backend modules.';
+$module_description = 'includes CKEditor 4.6.0 Standard, CKE allows editing content and can be integrated in frontend and backend modules.';

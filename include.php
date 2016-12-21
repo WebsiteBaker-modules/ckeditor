@@ -127,7 +127,7 @@ if( !$bWbConfigSetting ) { $ckeditor->config['format_tags'] = 'p;div;h1;h2;h3;h4
 
 if( !$bWbConfigSetting ) { $ckeditor->config['resize_dir'] = 'both'; }
 
-if( !$bWbConfigSetting ) { $ckeditor->config['autoParagraph'] = true; }
+if( !$bWbConfigSetting ) { $ckeditor->config['autoParagraph'] = false; }
 
 /**
 * The skin to load. It may be the name of the skin folder inside the editor installation path,
@@ -151,11 +151,11 @@ if( !$bWbConfigSetting ) {
     $ckeditor->config['extraPlugins'] = 'justify,find,flash,colorbutton,colordialog,dialogadvtab,autogrow,'
                                       . 'div,font,forms,iframe,indentblock,bidi,liststyle,pagebreak,save,'
                                       . 'selectall,showblocks,smiley,templates,codemirror,syntaxhighlight,'
-                                      . 'wblink,wbdroplets,youtube,oembed,backup,wbabout,wbrelation'
+                                      . 'wblink,wbdroplets,oembed,backup,wbabout,wbrelation'
                                       .'';
 
-    $ckeditor->config['removePlugins'] = 'link,wsc,save,newpage,print,shybutton,preview,wbsave,'
-                                        .'sourcearea,sourcedialog,imageresponsive,image2,language';
+    $ckeditor->config['removePlugins'] = 'link,wsc,save,newpage,print,shybutton,preview,wbsave,youtube,'
+                                        .'sourcearea,sourcedialog,imageresponsive,image2,language,flash';
  }
 
 if( !$bWbConfigSetting ) { $ckeditor->config['uiColor'] = '#BFD7EB'; }

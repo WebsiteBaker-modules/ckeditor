@@ -160,7 +160,7 @@
                     var menu = {};
 
                     if ( anchor.getAttribute( 'href' ) && anchor.getChildCount() )
-                        menu = { wblink : CKEDITOR.TRISTATE_OFF, unlink : CKEDITOR.TRISTATE_OFF };    
+                        menu = { wblink : CKEDITOR.TRISTATE_OFF, unlink : CKEDITOR.TRISTATE_OFF };
 
                     if ( anchor && anchor.hasAttribute( 'name' ) )
                         menu.anchor = menu.removeAnchor = CKEDITOR.TRISTATE_OFF;
@@ -405,7 +405,7 @@
          *
          * @param {CKEDITOR.editor} editor
          * @param {CKEDITOR.dom.element} element
-         * @returns {CKEDITOR.dom.element} Restored anchor element or nothing if the 
+         * @returns {CKEDITOR.dom.element} Restored anchor element or nothing if the
          * passed element was not a fake anchor.
          */
         tryRestoreFakeAnchor: function( editor, element ) {
@@ -590,7 +590,7 @@
                 case 'wblink':
                   if (data.newslink && data.newslink.url !== "") {
                     var url = ( CKEDITOR.tools.trim( data.newslink.url ) );
-                  } else {  
+                  } else {
                       var url = ( CKEDITOR.tools.trim( data.wblink.url ) ) || '';
                     }
                     set[ 'data-cke-saved-href' ] = url;
