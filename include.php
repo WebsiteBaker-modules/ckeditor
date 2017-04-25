@@ -33,7 +33,7 @@ function show_wysiwyg_editor(
     $toolbar = false,
     $OutputAsBuffer=false
     ) {
-    global $database,$admin;
+    global $database,$admin, $section_id;
 
     $modAbsPath = str_replace('\\','/',dirname(__FILE__));
     $ckeAbsPath = $modAbsPath.'/ckeditor/';
@@ -123,11 +123,11 @@ $ckeditor->config['language'] = strtolower( (@LANGUAGE ?: 'en') );
  * @type String
  * @default 'p;h1;h2;h3;h4;h5;h6;pre;address;div'
  */
-if( !$bWbConfigSetting ) { $ckeditor->config['format_tags'] = 'p;div;h1;h2;h3;h4;h5;h6;pre'; }
+if (!$bWbConfigSetting ) { $ckeditor->config['format_tags'] = 'p;div;h1;h2;h3;h4;h5;h6;pre'; }
 
-if( !$bWbConfigSetting ) { $ckeditor->config['resize_dir'] = 'both'; }
+if (!$bWbConfigSetting ) { $ckeditor->config['resize_dir'] = 'both'; }
 
-if( !$bWbConfigSetting ) { $ckeditor->config['autoParagraph'] = false; }
+if (!$bWbConfigSetting ) { $ckeditor->config['autoParagraph'] = false; }
 
 /**
 * The skin to load. It may be the name of the skin folder inside the editor installation path,
@@ -135,7 +135,7 @@ if( !$bWbConfigSetting ) { $ckeditor->config['autoParagraph'] = false; }
 * Available skins: moono, moonocolor, kama, bootstrapck
 *
 */
-if( !$bWbConfigSetting ) { $ckeditor->config['skin'] = 'moonocolor'; }
+if (!$bWbConfigSetting ) { $ckeditor->config['skin'] = 'moonocolor'; }
 
 /**
  *    Additional test for wysiwyg-admin
@@ -147,18 +147,20 @@ $ckeditor->looking_for_wysiwyg_admin( $database );
  *    Define all extra CKEditor plugins in _yourwb_/modules/ckeditor067/ckeditor/plugins here
  *
  */
-if( !$bWbConfigSetting ) {
-    $ckeditor->config['extraPlugins'] = 'justify,find,flash,colorbutton,colordialog,dialogadvtab,autogrow,'
-                                      . 'div,font,forms,iframe,indentblock,bidi,liststyle,pagebreak,save,'
-                                      . 'selectall,showblocks,smiley,templates,codemirror,syntaxhighlight,'
-                                      . 'wblink,wbdroplets,oembed,backup,wbabout,wbrelation'
-                                      .'';
+if (!$bWbConfigSetting ) {
+    $ckeditor->config['extraPlugins'] = 'justify,find,flash,colorbutton,colordialog,dialogadvtab,autogrow'
+                                      . ',div,font,forms,iframe,indentblock,bidi,liststyle,pagebreak'
+                                      . ',selectall,showblocks,smiley,templates,codemirror,syntaxhighlight'
+                                      . ',wblink,wbdroplets,oembed,backup,wbabout,wbrelation,filebrowser'
+                                      . ''
+                                      . '';
 
-    $ckeditor->config['removePlugins'] = 'link,wsc,save,newpage,print,shybutton,preview,wbsave,youtube,'
-                                        .'sourcearea,sourcedialog,imageresponsive,image2,language,flash';
+    $ckeditor->config['removePlugins']  = 'link,wsc,save,newpage,print,shybutton,preview,wbsave,youtube'
+                                        . ',sourcearea,sourcedialog,imageresponsive,image2,language,flash,alphamanager'
+                                        . ',placeholder';
  }
 
-if( !$bWbConfigSetting ) { $ckeditor->config['uiColor'] = '#BFD7EB'; }
+if (!$bWbConfigSetting ) { $ckeditor->config['uiColor'] = '#BFD7EB'; }
 
 //if ($toolbar && !$bWbConfigSetting) {$ckeditor->config['toolbar'] = $toolbar;}
 if ($toolbar) {$ckeditor->config['toolbar'] = $toolbar;}
@@ -168,7 +170,7 @@ if ($toolbar) {$ckeditor->config['toolbar'] = $toolbar;}
  *  or Meta (Mac) key is pressed on opening the context menu with the right mouse button click or the Menu key.
  *
  */
-if( !$bWbConfigSetting ) { $ckeditor->config['browserContextMenuOnCtrl'] = true; }
+if (!$bWbConfigSetting ) { $ckeditor->config['browserContextMenuOnCtrl'] = true; }
 
 /**
  *    Force the object to print/echo direct instead of returning the
@@ -177,7 +179,7 @@ if( !$bWbConfigSetting ) { $ckeditor->config['browserContextMenuOnCtrl'] = true;
  */
 $ckeditor->bOutputAsBuffer = $OutputAsBuffer;
 
-if( !$bWbConfigSetting ) { $ckeditor->config['entities'] = false; }
+if (!$bWbConfigSetting ) { $ckeditor->config['entities'] = false; }
 
 /**
  * Sets the DOCTYPE to be used when loading the editor content as HTML.
@@ -203,24 +205,37 @@ if( !$bWbConfigSetting ) { $ckeditor->config['entities'] = false; }
  *
  */
     $ckeditor->config['scayt_sLang'] = strtolower(LANGUAGE)."_".(LANGUAGE == "EN" ? "US" : LANGUAGE);
-if( !$bWbConfigSetting ) {
+if (!$bWbConfigSetting ) {
     $ckeditor->config['scayt_autoStartup'] = false;
  }
 /**
- *    The filebrowser are called in the include, because later on we can make switches, use WB_URL and so on
 $ckeditor->config['filebrowserBrowseUrl'] = $ckeditor->basePath.'filemanager/browser/elfinder/elfinder.html';
  */
 
-$connectorPath = $ckeditor->basePath.'filemanager/connectors/php/connector.php';
+$connectorPath = $ckeditor->basePath.'/filemanager/connectors/php/connector.php';
 $ckeditor->config['filebrowserBrowseUrl'] = $ckeditor->basePath.'filemanager/browser/default/browser.html?Connector='.$connectorPath;
 $ckeditor->config['filebrowserImageBrowseUrl'] = $ckeditor->basePath.'filemanager/browser/default/browser.html?Type=Image&Connector='.$connectorPath;
 $ckeditor->config['filebrowserFlashBrowseUrl'] = $ckeditor->basePath.'filemanager/browser/default/browser.html?Type=Flash&Connector='.$connectorPath;
+/**
+ *    The filebrowser are called in the include, because later on we can make switches, use WB_URL and so on
+   $ckeditor->config['filebrowserBrowseUrl'] = $ckeditor->basePath.'/filemanager/kcfinder/browse.php?opener=ckeditor&type=files';
+   $ckeditor->config['filebrowserImageBrowseUrl'] = $ckeditor->basePath.'/filemanager/kcfinder/browse.php?opener=ckeditor&type=images';
+   $ckeditor->config['filebrowserFlashBrowseUrl'] = $ckeditor->basePath.'/filemanager/kcfinder/browse.php?opener=ckeditor&type=flash';
+ */
+
+$ckeditor->config['uploader'] = false; // disabled for security reasons
 
 /**
  *    The Uploader has to be called, too.
- *
+if($ckeditor->config['uploader']==true) {
+   $ckeditor->config['filebrowserUploadUrl'] = $ckeditor->basePath.'/filemanager/kcfinder/upload.php?opener=ckeditor&type=files';
+   $ckeditor->config['filebrowserImageUploadUrl'] = $ckeditor->basePath.'/filemanager/kcfinder/upload.php?opener=ckeditor&type=images';
+   $ckeditor->config['filebrowserFlashUploadUrl'] = $ckeditor->basePath.'/filemanager/kcfinder/upload.php?opener=ckeditor&type=flash';
+}
  */
-$ckeditor->config['uploader'] = false; // disabled for security reasons
+
+/**
+ */
 if($ckeditor->config['uploader']==true) {
     $uploadPath = $ckeditor->basePath.'filemanager/connectors/php/upload.php?Type=';
     $ckeditor->config['filebrowserUploadUrl'] = $uploadPath.'File';
@@ -283,7 +298,9 @@ $ckeditor->resolve_path(
  *    them at all!
  *
  */
+
 if (isset($database) && $ckeditor->wysiwyg_admin_exists ) {
+    $aSection = $GLOBALS['section'];
     $data = null;
     $query = 'SELECT * from `'.TABLE_PREFIX.'mod_editor_admin` WHERE `editor`="ckeditor"';
     if (method_exists($database,'doQuery')) {
@@ -316,7 +333,7 @@ $ckeditor->config['width']  = $width;
 $ckeditor->config['autoGrow_minHeight'] =  200;
 $ckeditor->config['autoGrow_maxHeight'] = $height;
 $ckeditor->config['autoGrow_bottomSpace'] = 50;
-$ckeditor->config['autoGrow_onStartup'] = true;
+$ckeditor->config['autoGrow_onStartup'] = false;
 
 $ckeditor->reverse_htmlentities($content);
 

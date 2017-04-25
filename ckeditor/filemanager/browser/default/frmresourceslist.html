@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML>
 <!--
  * CKeditor - The text editor for Internet - http://www.ckeditor.net
  * Copyright (C) 2003-2010 Frederico Caldeira Knabben
@@ -27,8 +27,8 @@
     <link href="browser.css" type="text/css" rel="stylesheet">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <script type="text/javascript" src="js/common.js"></script>
-    
-    <script type="text/javascript">
+
+<script type="text/javascript">
 
 var oListManager = new Object() ;
 
@@ -48,8 +48,8 @@ oListManager.GetFolderRowHtml = function( folderName, folderPath )
 {
     // Build the link to view the folder.
     var sLink = '<a href="#" onclick="OpenFolder(\'' + ProtectPath( folderPath ) + '\');return false;">' ;
-    
-    return     '<div class="file" title="'+ folderName +'">' +            
+
+    return  '<div class="file" title="'+ folderName +'">' +
             '<div>' + sLink +
             '<img class="icon" alt="" src="images/folder_big.gif" border="0" width="48" height="48" ><\/a>' +
             '<\/div>' +
@@ -64,8 +64,8 @@ oListManager.GetFileRowHtml = function( fileName, fileUrl, fileSize ){
     var relLink = '<a href="'+ fileUrl +'" rel="lightbox">' ;
 
     // Get the file icon.
-    var sIcon = oIcons.GetIcon( fileName ) ;    
-    
+    var sIcon = oIcons.GetIcon( fileName ) ;
+
     /**
      *    Get file extension and decide if thumb or icon should be displayed
      */
@@ -79,8 +79,8 @@ oListManager.GetFileRowHtml = function( fileName, fileUrl, fileSize ){
 
             return '<div class="file" title="'+ fileName +'">' +
             '<span class="fSize">' +
-            '<nobr><img alt="' + sIcon + '" title="' + sIcon + '" src="images/icons/' + sIcon + '.gif" width="16" height="16" border="0"> ' 
-            + fileSize + 
+            '<nobr><img alt="' + sIcon + '" title="' + sIcon + '" src="images/icons/' + sIcon + '.gif" width="16" height="16" border="0"> '
+            + fileSize +
             ' kB</nobr><\/span>' +
             '<div class="thumbnail">' + sLink + imgTag +'<\/a>' +
             '<\/div>' +
@@ -96,8 +96,8 @@ function OpenFolder( folderPath )
 
 function OpenFile( fileUrl )
 {
-    //PATCH: Using CKEditors API we set the file in preview window.    
- 
+    //PATCH: Using CKEditors API we set the file in preview window.
+
     funcNum = GetUrlParam('CKEditorFuncNum') ;
     window.top.opener.CKEDITOR.tools.callFunction( funcNum, fileUrl.replace( '#', '%23' ));
     window.top.close() ;
@@ -119,9 +119,7 @@ function Refresh()
 
 function GetFoldersAndFilesCallBack( fckXml )
 {
-    if ( oConnector.CheckError( fckXml ) != 0 )
-        return ;
-
+    if ( oConnector.CheckError( fckXml ) != 0 ){return ;}
     // Get the current folder path.
     var oFolderNode = fckXml.SelectSingleNode( 'Connector/CurrentFolder' ) ;
     if ( oFolderNode == null )
@@ -131,9 +129,7 @@ function GetFoldersAndFilesCallBack( fckXml )
     }
     var sCurrentFolderPath    = oFolderNode.attributes.getNamedItem('path').value ;
     var sCurrentFolderUrl    = oFolderNode.attributes.getNamedItem('url').value ;
-
 //    var dTimer = new Date() ;
-
     var oHtml = new StringBuilder( '<div id="tableFiles"><div>' ) ;
 
     // Add the Folders.
@@ -158,25 +154,30 @@ function GetFoldersAndFilesCallBack( fckXml )
         var sFileUrl = oFileUrlAtt != null ? oFileUrlAtt.value : encodeURI( sCurrentFolderUrl + sFileName ).replace( /#/g, '%23' ) ;
 
         // hide index.php in browse media - added for WebsiteBaker
-        if (sFileName != "index.php") 
+        if (sFileName != "index.php")
         {
             oHtml.Append( oListManager.GetFileRowHtml( sFileName, sFileUrl, sFileSize ) ) ;
         }
     }
 
     oHtml.Append( '<\/div><\/div>' ) ;
-
     document.body.innerHTML = oHtml.ToString() ;
+    window.top.document.title = 'Finished processing in ' + ( ( ( new Date() ) - dTimer ) / 1000 ) + ' seconds' ;
 
-//    window.top.document.title = 'Finished processing in ' + ( ( ( new Date() ) - dTimer ) / 1000 ) + ' seconds' ;
+}
 
+// Helper function to get parameters from the query string.
+function _GetUrlParam( paramName ) {
+    var reParam = new RegExp( '(?:[\?&]|&)' + paramName + '=([^&]+)', 'i' );
+    var match = window.location.search.match( reParam );
+    return ( match && match.length > 1 ) ? match[1] : null;
 }
 
 function GetUrlParam( paramName )
 {
     var oRegex = new RegExp( '[\?&]' + paramName + '=([^&]+)', 'i' ) ;
     var oMatch = oRegex.exec( window.top.location.search ) ;
- 
+
     if ( oMatch && oMatch.length > 1 )
         return decodeURIComponent( oMatch[1] ) ;
     else
@@ -187,7 +188,7 @@ window.onload = function()
 {
     window.top.IsLoadedResourcesList = true ;
 }
-    </script>
+</script>
 </head>
 <body class="FileArea">
 </body>

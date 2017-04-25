@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML>
 <!--
  * CKeditor - The text editor for Internet - http://www.ckeditor.net
  * Copyright (C) 2003-2010 Frederico Caldeira Knabben
@@ -38,11 +38,9 @@ function SetCurrentFolder( resourceType, folderPath )
 function CreateFolder()
 {
     var sFolderName ;
-
     while ( true )
     {
         sFolderName = prompt( 'Type the name of the new folder:', '' ) ;
-
         if ( sFolderName == null )
             return ;
         else if ( sFolderName.length == 0 )
@@ -50,7 +48,6 @@ function CreateFolder()
         else
             break ;
     }
-
     oConnector.SendCommand( 'CreateFolder', 'NewFolderName=' + encodeURIComponent( sFolderName) , CreateFolderCallBack ) ;
 }
 
@@ -61,6 +58,7 @@ function CreateFolderCallBack( fckXml )
 
     /*
     // Get the current folder path.
+    */
     var oNode = fckXml.SelectSingleNode( 'Connector/Error' ) ;
     var iErrorNumber = parseInt( oNode.attributes.getNamedItem('number').value ) ;
 
@@ -85,17 +83,15 @@ function CreateFolderCallBack( fckXml )
             alert( 'Error creating folder. Error number: ' + iErrorNumber ) ;
             break ;
     }
-    */
 }
 
-window.onload = function()
-{
+window.onload = function(){
     window.top.IsLoadedCreateFolder = true ;
 }
         </script>
     </head>
     <body>
-        <table summary="" class="fullHeight" cellSpacing="0" cellPadding="0" width="100%" border="0">
+        <table class="fullHeight" >
             <tr>
                 <td>&nbsp;</td>
             </tr>

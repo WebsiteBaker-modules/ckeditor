@@ -1,5 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN"
-   "http://www.w3.org/TR/html4/frameset.dtd">
+<!DOCTYPE HTML>
 <!--
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
  * Copyright (C) 2003-2010 Frederico Caldeira Knabben
@@ -27,13 +26,12 @@
         <title>CKeditor - Resources Browser</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link href="browser.css" type="text/css" rel="stylesheet">
-        <script type="text/javascript" src="js/fckxml.js"></script>        
+        <script type="text/javascript" src="js/fckxml.js"></script>
         <script type="text/javascript">
 // Automatically detect the correct document.domain (#1919).
 (function()
 {
     var d = document.domain ;
-
     while ( true )
     {
         // Test if we can access a parent property.
@@ -44,13 +42,10 @@
         }
         catch( e )
         {}
-
         // Remove a domain part: www.mytest.example.com => mytest.example.com => example.com ...
         d = d.replace( /.*?(?:\.|$)/, '' ) ;
-
         if ( d.length == 0 )
             break ;        // It was not able to detect the domain.
-
         try
         {
             document.domain = d ;
@@ -75,25 +70,18 @@ function GetUrlParam( paramName )
 
 var oConnector = new Object() ;
 oConnector.CurrentFolder    = '/' ;
-
 var sConnUrl = GetUrlParam( 'Connector' ) ;
-
 // Gecko has some problems when using relative URLs (not starting with slash).
 if ( sConnUrl.substr(0,1) != '/' && sConnUrl.indexOf( '://' ) < 0 )
     sConnUrl = window.location.href.replace( /browser.html.*$/, '' ) + sConnUrl ;
-
 oConnector.ConnectorUrl = sConnUrl + ( sConnUrl.indexOf('?') != -1 ? '&' : '?' ) ;
-
 var sServerPath = GetUrlParam( 'ServerPath' ) ;
-if ( sServerPath.length > 0 )
-    oConnector.ConnectorUrl += 'ServerPath=' + encodeURIComponent( sServerPath ) + '&' ;
-
+if ( sServerPath.length > 0 ){
+    oConnector.ConnectorUrl += 'ServerPath=' + encodeURIComponent( sServerPath ) + '&' ;}
 oConnector.ResourceType        = GetUrlParam( 'Type' ) ;
 oConnector.ShowAllTypes        = ( oConnector.ResourceType.length == 0 ) ;
-
-if ( oConnector.ShowAllTypes )
-    oConnector.ResourceType = 'File' ;
-
+if ( oConnector.ShowAllTypes ){
+    oConnector.ResourceType = 'File' ;}
 oConnector.SendCommand = function( command, params, callBackFunction )
 {
     var sUrl = this.ConnectorUrl + 'Command=' + command ;
@@ -182,21 +170,30 @@ function OnUploadCompleted( errorNumber, fileUrl, fileName, customMsg )
 
         </script>
     </head>
-        
-    <frameset cols="150,*" class="Frame" framespacing="0" frameborder="1">
-        <frameset rows="45,*" framespacing="0" >
+
+<!--
+    <body>
+<div class="frameset Frame">
+    <div class="frameset Frame">
+        <iframe src="frmresourceslist.html"></iframe>
+    </div>
+</div>
+    </body>
+-->
+    <frameset cols="150,*" class="Frame" >
+        <frameset rows="25,*">
             <frame src="frmresourcetype.html" scrolling="no" frameborder="0">
             <frame name="frmFolders" src="frmfolders.html" scrolling="auto" frameborder="0">
         </frameset>
-        <frameset rows="45,*,70" framespacing="0">
+        <frameset rows="45,*,70">
             <frame name="frmActualFolder" src="frmactualfolder.html" scrolling="no" frameborder="0">
             <frame name="frmResourcesList" src="frmresourceslist.html" scrolling="auto" frameborder="0">
-            <frameset cols="150,*,0" framespacing="0" frameborder="0">
+            <frameset cols="1050,*,0" >
                 <frame name="frmCreateFolder" src="frmcreatefolder.html" scrolling="no" frameborder="0">
                 <frame name="frmUpload" src="frmupload.html" scrolling="no" frameborder="0">
                 <frame name="frmUploadWorker" src="javascript:void(0)" scrolling="no" frameborder="0">
             </frameset>
         </frameset>
     </frameset>
-        
+
 </html>

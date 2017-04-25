@@ -18,3 +18,7 @@
 // Must include code to stop this file being accessed directly
 if(defined('WB_PATH') == false) { die('Illegale file access /'.basename(__DIR__).'/'.basename(__FILE__).''); }
 /* -------------------------------------------------------- */
+
+if (is_writeable(__DIR__.'/ckeditor/plugins/wblink/plugin.js.bak')){
+    unlink (__DIR__.'/ckeditor/plugins/wblink/plugin.js.bak');
+}

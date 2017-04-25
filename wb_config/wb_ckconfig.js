@@ -90,7 +90,7 @@ CKEDITOR.editorConfig = function( config )
         '/',
         { name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
         { name: 'colors', items : [ 'TextColor','BGColor' ] },
-        { name: 'tools', items : [ 'Maximize', 'ShowBlocks','Syntaxhighlight','-','About' ] }
+        { name: 'tools',  items : [ 'Maximize', 'ShowBlocks','Syntaxhighlight','CreatePlaceholder','-','About' ] }
 
     ];
 
@@ -106,7 +106,9 @@ CKEDITOR.editorConfig = function( config )
 
     config.browserContextMenuOnCtrl = true;
 
-    config.ModulVersiom  = '';
+    config.ModulVersion  = '';
+    config.WBrevision    = '';
+    config.WBversion     = '2.8.3 SP6';
 
     config.fullPage = false;
 
@@ -121,34 +123,35 @@ CKEDITOR.editorConfig = function( config )
 
   // Define all extra CKEditor plugins in _yourwb_/modules/ckeditor/ckeditor/plugins here
   //config.extraPlugins = 'timestamp';
-    config.extraPlugins  = 'justify,find,flash,colorbutton,colordialog,dialogadvtab,'
-                         + 'div,font,forms,iframe,indentblock,language,bidi,liststyle,pagebreak,save,'
-                         + 'selectall,showblocks,smiley,templates,codemirror,autogrow,'
-                         + 'wblink,wbdroplets,youtube,oembed,backup,wbsave,wbrelation,wbabout';
+    config.extraPlugins  = 'justify,find,flash,colorbutton,colordialog,dialogadvtab'
+                         + ',div,font,forms,iframe,indentblock,language,bidi,liststyle,pagebreak,save'
+                         + ',selectall,showblocks,smiley,templates,codemirror,autogrow,filebrowser'
+                         + ',wblink,wbdroplets,youtube,oembed,backup,wbrelation,wbabout';
 
-    config.removePlugins = 'wsc,link,save,newpage,print,shybutton,syntaxhighlight,preview,sourcearea,sourcedialog';
+    config.removePlugins = 'wsc,link,save,newpage,print,shybutton,syntaxhighlight,preview,alphamanager'
+                         + ',sourcearea,sourcedialog,imageresponsive,image2,wbsave,youtube,language,flash,placeholder';
 
     config.browserContextMenuOnCtrl = true;
 
-    config.entities = true;
+    config.entities = false;
 
     config.scayt_autoStartup = false;
 
     // The standard height and width of CKEditor in pixels.
-    config.height           = '250';
+    config.height           = '350';
     config.width            = '100%';
     config.toolbarLocation  = 'top';
 
-    config.autoGrow_minHeight = 200;
-    config.autoGrow_maxHeight = 600;
+    config.autoGrow_minHeight = 100;
+    config.autoGrow_maxHeight = 350;
     config.autoGrow_bottomSpace = 50;
-    config.autoGrow_onStartup = true;
+    config.autoGrow_onStartup = false;
     // Define possibilities of automatic resizing in pixels. Set config.resize_enabled to false to
     // deactivate resizing.
     config.resize_enabled   = true;
     config.resize_minWidth  = 500;
     config.resize_maxWidth  = 1500;
-    config.resize_minHeight = 200;
+    config.resize_minHeight = 100;
     config.resize_maxHeight = 1678;
     config.resize_dir = 'both';
 
@@ -185,16 +188,21 @@ CKEDITOR.editorConfig = function( config )
     *  Uncommenting this line doesn't mean the user will not be able to type PHP code in the source.
     *  This kind of prevention must be done in the server side, so just leave this line as is. */
     config.protectedSource.push(/<\?[\s\S]*?\?>/g); // PHP Code
-    config.protectedSource.push(/\[\[[\s\S]*?\]\]/g); //  droplets
-    config.protectedSource.push( /<i[\s\S]*?\>/g ); //allows beginning <i> tag
-    config.protectedSource.push( /<\/i[\s\S]*?\>/g ); //allows ending </i> tag
-    config.protectedSource.push( /<span[\s\S]*?\>/g ); //allows beginning <span> tag
-    config.protectedSource.push( /<\/span[\s\S]*?\>/g ); //allows ending </span> tag
+//    config.protectedSource.push(/\[\[[\s\S]*?\]\]/g); //  droplets
+//    config.protectedSource.push( /<i[\s\S]*?\>/g ); //allows beginning <i> tag
+//    config.protectedSource.push( /<\/i[\s\S]*?\>/g ); //allows ending </i> tag
+//    config.protectedSource.push( /<span[\s\S]*?\>/g ); //allows beginning <span> tag
+//    config.protectedSource.push( /<\/span[\s\S]*?\>/g ); //allows ending </span> tag
     //disable ckes Advanced Content Filter (ACF) to avoid wblinks to be filtered?
     config.allowedContent = true;
 
+    config.jsplus_image_editor_init_tool = 'text';
+
     // Simplify the dialog windows.
 //    config.removeDialogTabs = 'image:advanced;link:advanced';
+
+    config.filebrowserWindowWidth = '80%';
+    config.filebrowserWindowHeight = '70%';
 
 };
 

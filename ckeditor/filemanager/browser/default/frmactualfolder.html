@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML>
 <!--
  * CKeditor - The text editor for Internet - http://www.ckeditor.net
  * Copyright (C) 2003-2010 Frederico Caldeira Knabben
@@ -42,13 +42,10 @@
         }
         catch( e )
         {}
-
         // Remove a domain part: www.mytest.example.com => mytest.example.com => example.com ...
         d = d.replace( /.*?(?:\.|$)/, '' ) ;
-
         if ( d.length == 0 )
             break ;        // It was not able to detect the domain.
-
         try
         {
             document.domain = d ;
@@ -73,15 +70,15 @@ window.onload = function()
         </script>
     </head>
     <body>
-        <table class="fullHeight" cellSpacing="0" cellPadding="0" width="100%" border="0">
+        <table class="fullHeight" >
             <tr>
                 <td>
                     <button style="WIDTH: 100%" type="button" class="ActualFolder">
-                        <table cellSpacing="0" cellPadding="0" width="100%" border="0"  >
+                        <table  >
                             <tr>
-                                <td><img alt="" src="images/FolderOpened_big.gif" width="24" height="24"></td>
+                                <td><img alt="" src="images/FolderOpened_big.gif" style="width : 24px; white-space: nowrap;"></td>
                                 <td>&nbsp;</td>
-                                <td id="tdName" width="100%" nowrap>/</td>
+                                <td id="tdName" style="width :100%; white-space: nowrap;" >/</td>
                                 <td>&nbsp;</td>
                             </tr>
                         </table>

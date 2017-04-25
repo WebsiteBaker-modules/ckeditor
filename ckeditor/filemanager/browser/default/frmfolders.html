@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!DOCTYPE HTML>
 <!--
  * CKeditor - The text editor for Internet - http://www.ckeditor.net
  * Copyright (C) 2003-2010 Frederico Caldeira Knabben
@@ -188,10 +188,12 @@ window.onload = function()
         </script>
     </head>
     <body class="FileArea">
-        <table id="tableFiles" cellSpacing="0" cellPadding="0" width="100%" border="0">
+        <table id="tableFiles" >
             <tr id="trUp" style="DISPLAY: none">
-                <td><a id="linkUpIcon" href="#"><img alt="" src="images/FolderUp.gif" width="20" height="20" border="0"></a></td>
-                <td nowrap width="100%">&nbsp;
+                <td><a id="linkUpIcon" href="#">
+                <img alt="" src="images/FolderUp.gif" width="20" height="20"></a>
+                </td>
+                <td  style="width: 100%;">&nbsp;
                 <a id="linkUp" href="#">..</a></td>
             </tr>
         </table>

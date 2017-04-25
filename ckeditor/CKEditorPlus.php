@@ -22,8 +22,8 @@ class CKEditorPlus extends CKEditor
     private $lookup_html = array(
         '&gt;'    => ">",
         '&lt;'    => "<",
-        '&quot;' => "\"",
-        '&amp;'     => "&"
+        '&quot;'  => "\"",
+        '&amp;'   => "&"
     );
 
 /**
@@ -66,7 +66,7 @@ class CKEditorPlus extends CKEditor
 
 //    public function __construct() { }
 
-    public function setTemplatePath ($templateFolder='') 
+    public function setTemplatePath ($templateFolder='')
     {
 //        static $initComplete;
         if($templateFolder=='') { return; }
@@ -143,7 +143,7 @@ class CKEditorPlus extends CKEditor
  *    @param    string    Optional a path_addition, e.g. "wb:"
  *
  */
-    public function resolve_path($key= "", $aPath, $aPath_default, $path_addition="") 
+    public function resolve_path($key= "", $aPath, $aPath_default, $path_addition="")
     {
         static $initComplete = array();
         $temp = WB_PATH.$aPath;
